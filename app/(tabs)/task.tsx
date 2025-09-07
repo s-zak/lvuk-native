@@ -83,14 +83,30 @@ const styles = StyleSheet.create({
     position: 'absolute',
   },
   inputContainer: {
-    width: '100%',
-    paddingHorizontal: 32,
-    position: 'absolute',
-    top: HEADER_HEIGHT,
-    zIndex: 1,
+    width: '90%',
+    alignSelf: 'center',
+    backgroundColor: '#FFFFFF',
+    borderRadius: 10,
   },
   input: {
-    fontSize: 18,
-    backgroundColor: 'white'
-  }
+    width: '100%',
+    position: 'absolute',
+    top: 70,
+    fontSize: 16,
+    padding: 12,
+    paddingHorizontal: 30,
+    borderRadius: 10,
+    backgroundColor: '#FFFFFF',
+    color: '#333',
+    zIndex: 1,
+  },
+  user: {
+    padding: 15,
+    marginHorizontal: 4,
+    marginVertical: 4,
+    backgroundColor: '#FFFFFF',
+    borderRadius: 8,
+    fontSize: 16,
+    color: '#333',
+  },
 });
