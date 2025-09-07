@@ -1,28 +1,38 @@
 import { StyleSheet, Text, TextInput, View} from 'react-native';
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import { IconSymbol } from '@/components/ui/IconSymbol';
 import ParallaxFlatList, { HEADER_HEIGHT } from '@/components/ParallaxFlatList';
 
+type User = {
+  name: string;
+}
+
+const filterUsers = (users: User[], name: string) => {
+  const nameLowerCase = name.toLowerCase()
+  return users.filter((user) =>
+    user.name.toLowerCase().includes(nameLowerCase)
+  );
+}
+
 export default function TabTwoScreen() {
-  const [users, setUsers] = useState([]);
-  const [filteredUsers, setFilteredUsers] = useState([]);
+  const users = useRef([]);
+  const [filteredUsers, setFilteredUsers] = useState<User[]>([]);
   const [query, setQuery] = useState("");
 
   useEffect(() => {
     fetch("https://jsonplaceholder.typicode.com/users")
       .then((res) => res.json())
-      .then((data) => setUsers(data));
-  });
+      .then((data) => {
+        users.current = data;
+        setFilteredUsers(data);
+      });
+  }, []);
 
   useEffect(() => {
-    fetch("https://jsonplaceholder.typicode.com/users")
-      .then((res) => res.json())
-      .then((data) => {
-        const filtered = data.filter((user) =>
-          user.name.toLowerCase().includes(query.toLowerCase())
-        );
-        setFilteredUsers(filtered);
-      });
+    if (!users.current.length) {
+      return
+    }
+    setFilteredUsers(filterUsers(users.current, query));
   }, [query]); 
 
   return (
