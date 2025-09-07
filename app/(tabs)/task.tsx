@@ -1,7 +1,7 @@
-import { StyleSheet, FlatList, Text, TextInput, View} from 'react-native';
+import { StyleSheet, Text, TextInput, View} from 'react-native';
 import React, { useEffect, useState } from 'react';
-import ParallaxScrollView from '@/components/ParallaxScrollView';
 import { IconSymbol } from '@/components/ui/IconSymbol';
+import ParallaxFlatList, { HEADER_HEIGHT } from '@/components/ParallaxFlatList';
 
 export default function TabTwoScreen() {
   const [users, setUsers] = useState([]);
@@ -26,42 +26,54 @@ export default function TabTwoScreen() {
   }, [query]); 
 
   return (
-    <ParallaxScrollView
-      headerBackgroundColor={{ light: '#D0D0D0', dark: '#353636' }}
-      headerImage={
-        <IconSymbol
-          size={310}
-          color="#808080"
-          name="brain.head.profile.fill"
-          style={styles.headerImage}
-        />
-      }>
-       <View style={styles.container}>
+    <View style={styles.container}>
+      <View style={styles.inputContainer}>
         <TextInput
           style={styles.input}
           value={query}
           onChangeText={setQuery}
           placeholder="Search users..."
         />
-        </View>
-        <FlatList
-          data={filteredUsers}
-          keyExtractor={(item, index) => index.toString()}
-          renderItem={({ item }) => <Text style={styles.user}>{item.name}</Text>}
-        />
-    </ParallaxScrollView>
+      </View>
+      <ParallaxFlatList
+        headerBackgroundColor={{ light: '#D0D0D0', dark: '#353636' }}
+        headerImage={
+          <IconSymbol
+            size={310}
+            color="#808080"
+            name="brain.head.profile.fill"
+            style={styles.headerImage}
+          />
+        }
+        data={filteredUsers}
+        keyExtractor={(item, index) => index.toString()}
+        renderItem={({ item }) => <Text style={styles.user}>{item.name}</Text>}
+        >
+
+      </ParallaxFlatList>
+    </View>
   );
 }
 
 const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+  },
   headerImage: {
     color: '#808080',
     bottom: -90,
     left: -35,
     position: 'absolute',
   },
-  container: {
-    flexDirection: 'row',
-    gap: 8,
+  inputContainer: {
+    width: '100%',
+    paddingHorizontal: 32,
+    position: 'absolute',
+    top: HEADER_HEIGHT,
+    zIndex: 1,
   },
+  input: {
+    fontSize: 18,
+    backgroundColor: 'white'
+  }
 });
