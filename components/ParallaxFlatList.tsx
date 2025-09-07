@@ -14,19 +14,17 @@ import { useColorScheme } from '@/hooks/useColorScheme';
 
 export const HEADER_HEIGHT = 170;
 
-type Item = {}
-
-type Props = FlatListProps<Item> & PropsWithChildren<{
+type Props<T> = FlatListProps<T> & PropsWithChildren<{
   headerImage: ReactElement;
   headerBackgroundColor: { dark: string; light: string };
 }>;
 
-export default function ParallaxFlatList({
+export default function ParallaxFlatList<T>({
   children,
   headerImage,
   headerBackgroundColor,
   ...flatListProps
-}: Props) {
+}: Props<T>) {
   const colorScheme = useColorScheme() ?? 'light';
 
   const scrollOffset = useSharedValue(0);

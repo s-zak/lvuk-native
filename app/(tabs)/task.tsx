@@ -5,6 +5,7 @@ import ParallaxFlatList, { HEADER_HEIGHT } from '@/components/ParallaxFlatList';
 import { useDebouncedCallback } from 'use-debounce';
 
 type User = {
+  id: string;
   name: string;
 }
 
@@ -13,6 +14,14 @@ const filterUsers = (users: User[], name: string) => {
   return users.filter((user) =>
     user.name.toLowerCase().includes(nameLowerCase)
   );
+}
+
+function keyExtractor<T extends { id: string }>(item: T) {
+  return item.id.toString();
+}
+
+function renderItem({ item } : { item: User }) {
+  return <Text style={styles.user}>{item.name}</Text>;
 }
 
 export default function TabTwoScreen() {
@@ -46,7 +55,7 @@ export default function TabTwoScreen() {
           placeholder="Search users..."
         />
       </View>
-      <ParallaxFlatList
+      <ParallaxFlatList<User>
         headerBackgroundColor={{ light: '#D0D0D0', dark: '#353636' }}
         headerImage={
           <IconSymbol
@@ -57,10 +66,9 @@ export default function TabTwoScreen() {
           />
         }
         data={filteredUsers}
-        keyExtractor={(item, index) => index.toString()}
-        renderItem={({ item }) => <Text style={styles.user}>{item.name}</Text>}
+        keyExtractor={keyExtractor}
+        renderItem={renderItem}
         >
-
       </ParallaxFlatList>
     </View>
   );
