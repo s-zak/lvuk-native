@@ -27,8 +27,6 @@ function renderItem({ item } : { item: User }) {
 export default function TabTwoScreen() {
   const users = useRef([]);
   const [filteredUsers, setFilteredUsers] = useState<User[]>([]);
-  const [query, setQuery] = useState("");
-  const debouncedSetQuery = useDebouncedCallback(setQuery, 150);
 
   useEffect(() => {
     fetch("https://jsonplaceholder.typicode.com/users")
@@ -39,19 +37,19 @@ export default function TabTwoScreen() {
       });
   }, []);
 
-  useEffect(() => {
+  const filterUsersBySearchTextDebounced = useDebouncedCallback((text: string) => {
     if (!users.current.length) {
       return;
     }
-    setFilteredUsers(filterUsers(users.current, query));
-  }, [query]); 
+    setFilteredUsers(filterUsers(users.current, text));
+  }, 150);
 
   return (
     <View style={styles.container}>
       <View style={styles.inputContainer}>
         <TextInput
           style={styles.input}
-          onChangeText={debouncedSetQuery}
+          onChangeText={filterUsersBySearchTextDebounced}
           placeholder="Search users..."
         />
       </View>
