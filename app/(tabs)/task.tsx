@@ -1,8 +1,10 @@
-import { StyleSheet, Text, TextInput, View} from 'react-native';
-import React, { useEffect, useRef, useState } from 'react';
+import { StyleSheet, Text, TextInput, useWindowDimensions, View} from 'react-native';
+import React, { useEffect, useMemo, useRef, useState } from 'react';
 import { IconSymbol } from '@/components/ui/IconSymbol';
 import ParallaxFlatList, { HEADER_HEIGHT } from '@/components/ParallaxFlatList';
 import { useDebouncedCallback } from 'use-debounce';
+
+const itemHeight = 64;
 
 type User = {
   id: string;
@@ -27,6 +29,8 @@ function renderItem({ item } : { item: User }) {
 export default function TabTwoScreen() {
   const users = useRef([]);
   const [filteredUsers, setFilteredUsers] = useState<User[]>([]);
+  const { height } = useWindowDimensions();
+  const initialNumToRender = useMemo(() => Math.ceil(height / itemHeight), [height]);
 
   useEffect(() => {
     fetch("https://jsonplaceholder.typicode.com/users")
@@ -66,6 +70,8 @@ export default function TabTwoScreen() {
         data={filteredUsers}
         keyExtractor={keyExtractor}
         renderItem={renderItem}
+        windowSize={10}
+        initialNumToRender={initialNumToRender}
         >
       </ParallaxFlatList>
     </View>
