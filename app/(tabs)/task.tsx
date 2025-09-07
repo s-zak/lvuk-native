@@ -2,13 +2,14 @@ import { StyleSheet, Text, TextInput, View} from 'react-native';
 import React, { useEffect, useRef, useState } from 'react';
 import { IconSymbol } from '@/components/ui/IconSymbol';
 import ParallaxFlatList, { HEADER_HEIGHT } from '@/components/ParallaxFlatList';
+import { useDebouncedCallback } from 'use-debounce';
 
 type User = {
   name: string;
 }
 
 const filterUsers = (users: User[], name: string) => {
-  const nameLowerCase = name.toLowerCase()
+  const nameLowerCase = name.toLowerCase();
   return users.filter((user) =>
     user.name.toLowerCase().includes(nameLowerCase)
   );
@@ -18,6 +19,7 @@ export default function TabTwoScreen() {
   const users = useRef([]);
   const [filteredUsers, setFilteredUsers] = useState<User[]>([]);
   const [query, setQuery] = useState("");
+  const debouncedSetQuery = useDebouncedCallback(setQuery, 150);
 
   useEffect(() => {
     fetch("https://jsonplaceholder.typicode.com/users")
@@ -30,7 +32,7 @@ export default function TabTwoScreen() {
 
   useEffect(() => {
     if (!users.current.length) {
-      return
+      return;
     }
     setFilteredUsers(filterUsers(users.current, query));
   }, [query]); 
@@ -40,8 +42,7 @@ export default function TabTwoScreen() {
       <View style={styles.inputContainer}>
         <TextInput
           style={styles.input}
-          value={query}
-          onChangeText={setQuery}
+          onChangeText={debouncedSetQuery}
           placeholder="Search users..."
         />
       </View>
